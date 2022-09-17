@@ -1,0 +1,520 @@
+<!DOCTYPE html><html lang="en" style="font-size:16px"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Core/ClusterManager.js</title><!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><script src="scripts/third-party/hljs.js" defer="defer"></script><script src="scripts/third-party/hljs-line-num.js" defer="defer"></script><script src="scripts/third-party/popper.js" defer="defer"></script><script src="scripts/third-party/tippy.js" defer="defer"></script><script src="scripts/third-party/tocbot.js"></script><script>var baseURL="/"</script><link rel="stylesheet" href="styles/clean-jsdoc-theme.min.css"><svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none"><defs><symbol id="copy-icon" viewbox="0 0 488.3 488.3"><g><path d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/><path d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z"/></g></symbol><symbol id="search-icon" viewBox="0 0 512 512"><g><g><path d="M225.474,0C101.151,0,0,101.151,0,225.474c0,124.33,101.151,225.474,225.474,225.474    c124.33,0,225.474-101.144,225.474-225.474C450.948,101.151,349.804,0,225.474,0z M225.474,409.323    c-101.373,0-183.848-82.475-183.848-183.848S124.101,41.626,225.474,41.626s183.848,82.475,183.848,183.848    S326.847,409.323,225.474,409.323z"/></g></g><g><g><path d="M505.902,476.472L386.574,357.144c-8.131-8.131-21.299-8.131-29.43,0c-8.131,8.124-8.131,21.306,0,29.43l119.328,119.328    c4.065,4.065,9.387,6.098,14.715,6.098c5.321,0,10.649-2.033,14.715-6.098C514.033,497.778,514.033,484.596,505.902,476.472z"/></g></g></symbol><symbol id="font-size-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M11.246 15H4.754l-2 5H.6L7 4h2l6.4 16h-2.154l-2-5zm-.8-2L8 6.885 5.554 13h4.892zM21 12.535V12h2v8h-2v-.535a4 4 0 1 1 0-6.93zM19 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></symbol><symbol id="add-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></symbol><symbol id="minus-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M5 11h14v2H5z"/></symbol><symbol id="dark-theme-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></symbol><symbol id="light-theme-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></symbol><symbol id="reset-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.537 19.567A9.961 9.961 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10c0 2.136-.67 4.116-1.81 5.74L17 12h3a8 8 0 1 0-2.46 5.772l.997 1.795z"/></symbol><symbol id="down-icon" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z"></path></symbol><symbol id="codepen-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16.5 13.202L13 15.535v3.596L19.197 15 16.5 13.202zM14.697 12L12 10.202 9.303 12 12 13.798 14.697 12zM20 10.869L18.303 12 20 13.131V10.87zM19.197 9L13 4.869v3.596l3.5 2.333L19.197 9zM7.5 10.798L11 8.465V4.869L4.803 9 7.5 10.798zM4.803 15L11 19.131v-3.596l-3.5-2.333L4.803 15zM4 13.131L5.697 12 4 10.869v2.262zM2 9a1 1 0 0 1 .445-.832l9-6a1 1 0 0 1 1.11 0l9 6A1 1 0 0 1 22 9v6a1 1 0 0 1-.445.832l-9 6a1 1 0 0 1-1.11 0l-9-6A1 1 0 0 1 2 15V9z"/></symbol><symbol id="close-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/></symbol><symbol id="menu-icon" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"/></symbol></defs></svg></head><body class="dark" data-theme="dark"><div class="sidebar-container"><div class="sidebar" id="sidebar"><a href="/" class="sidebar-title">Home</a><div class="sidebar-items-container"><div class="sidebar-section-title with-arrow" data-isopen="false" id="tPlX2SkmnK-_oezTZfzi-"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="Cluster.html">Cluster</a></div><div class="sidebar-section-children"><a href="ClusterClient.html">ClusterClient</a></div><div class="sidebar-section-children"><a href="ClusterManager.html">ClusterManager</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="k_8M6MVk3FsKQ5K_fQCsH"><div>Events</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="Client.html#event:error">error</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:death">death</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:error">error</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:ready">ready</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:spawn">spawn</a></div><div class="sidebar-section-children"><a href="ClusterClient.html#event:message">message</a></div><div class="sidebar-section-children"><a href="ClusterManager.html#event:clusterCreate">clusterCreate</a></div><div class="sidebar-section-children"><a href="ClusterManager.html#event:debug">debug</a></div><div class="sidebar-section-children"><a href="Shard.html#event:message">message</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="i3CDfNkxjKmTpjriTk-qY"><div>Global</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="global.html#ClusterSpawnOptions">ClusterSpawnOptions</a></div></div></div></div></div><div class="navbar-container" id="VuAckcnZhf"><nav class="navbar"><div class="navbar-left-items"></div><div class="navbar-right-items"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div><nav></nav></nav></div><div class="toc-container"><div class="toc-content"><span class="bold">On this page</span><div id="eed4d2a0bfd64539bb9df78095dec881"></div></div></div><div class="body-wrapper"><div class="main-content"><div class="main-wrapper"><section id="source-page" class="source-page"><header><h1 id="title" class="has-anchor">Core_ClusterManager.js</h1></header><article><pre class="prettyprint source lang-js"><code>// @ts-check
+const EventEmitter = require('events');
+
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+const Util = require('../Util/Util.js');
+
+const Queue = require('../Structures/Queue.js');
+
+const Cluster = require('./Cluster.js');
+
+const PromiseHandler = require('../Structures/PromiseHandler.js');
+
+class ClusterManager extends EventEmitter {
+    /**
+     * @param {string} file Path to your bot file
+     * @param {object} [options] Options for the cluster manager
+     * @param {string|number} [options.totalShards='auto'] Number of total internal shards or "auto"
+     * @param {string|number} [options.totalClusters='auto'] Number of total Clusters\Process to spawn
+     * @param {number} [options.shardsPerClusters] Number of shards per cluster
+     * @param {string[]} [options.shardArgs=[]] Arguments to pass to the clustered script when spawning
+     * (only available when using the `process` mode)
+     * @param {string[]} [options.execArgv=[]] Arguments to pass to the clustered script executable when spawning
+     * @param {boolean} [options.respawn=true] Whether clusters should automatically respawn upon exiting
+     * (only available when using the `process` mode)
+     * @param {ClusterManagerMode} [options.mode='worker'] Which mode to use for clustering
+     * @param {number[]} [options.shardList] A Array of Internal Shards Ids, which should get spawned
+     * @param {string} [options.token] Token to use for automatic internal shard count and passing to bot file
+     * @param {object} [options.restarts] Restart options
+     * @param {number} [options.restarts.interval] Interval in milliseconds on which the current restarts amount of a cluster will be resetted
+     * @param {number} [options.restarts.max] Maximum amount of restarts a cluster can have in the interval
+     * @param {object} [options.queue] Control the Spawn Queue
+     * @param {boolean} [options.queue.auto=true] Whether the spawn queue be automatically managed
+     */
+    constructor(file, options = {}) {
+        super();
+        options = Util.mergeDefault(
+            {
+                totalClusters: 'auto',
+                totalShards: 'auto',
+                shardArgs: [],
+                execArgv: [],
+                respawn: true,
+                mode: 'process',
+                token: process.env.DISCORD_TOKEN,
+                queue: {
+                    auto: true,
+                },
+                restarts: {
+                    max: 3,
+                    interval: 60000*60,
+                    current: 0,
+                },
+                clusterData: {},
+                clusterOptions: {},
+            },
+            options,
+        );
+
+        if(options.keepAlive) throw new Error('keepAlive is not supported anymore on and above v1.6.0. Import it as plugin ("HeartBeatManager"), therefore check the libs readme');
+
+        /**
+         * Whether clusters should automatically respawn upon exiting
+         * @type {boolean}
+         */
+        this.respawn = options.respawn;
+
+
+        /**
+         * How many times a cluster can maximally restart in the given interval
+         * @type {Object}
+         * @param {number} [interval=60000*60] Interval in milliseconds
+         * @param {number} [max=3] Max amount of restarts
+         * @param {number} [current=0] Current amount of restarts
+        */
+        this.restarts = options.restarts;
+
+        /**
+         * Data, which is passed to the workerData or the processEnv
+         * @type {object}
+         */
+        this.clusterData = options.clusterData;
+
+        /**
+         * Options, which is passed when forking a child or creating a thread
+         * @type {object}
+         */
+        this.clusterOptions = options.clusterOptions;
+
+
+        /**
+         * Path to the bot script file
+         * @type {string}
+         */
+        this.file = file;
+        if (!file) throw new Error('CLIENT_INVALID_OPTION | No File specified.');
+        if (!path.isAbsolute(file)) this.file = path.resolve(process.cwd(), file);
+        const stats = fs.statSync(this.file);
+        if (!stats.isFile()) throw new Error('CLIENT_INVALID_OPTION | Provided is file is not type of file');
+
+        /**
+         * Amount of internal shards in total
+         * @type {number}
+         */
+        this.totalShards = options.totalShards || 'auto';
+        if (this.totalShards !== 'auto') {
+            if (typeof this.totalShards !== 'number' || isNaN(this.totalShards)) {
+                throw new TypeError('CLIENT_INVALID_OPTION | Amount of internal shards must be a number.');
+            }
+            if (this.totalShards &lt; 1)
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of internal shards must be at least 1.');
+            if (!Number.isInteger(this.totalShards)) {
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of internal shards must be an integer.');
+            }
+        }
+
+        /**
+         * Amount of total clusters to spawn
+         * @type {number}
+         */
+        this.totalClusters = options.totalClusters || 'auto';
+        if (this.totalClusters !== 'auto') {
+            if (typeof this.totalClusters !== 'number' || isNaN(this.totalClusters)) {
+                throw new TypeError('CLIENT_INVALID_OPTION | Amount of Clusters must be a number.');
+            }
+            if (this.totalClusters &lt; 1)
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of Clusters must be at least 1.');
+            if (!Number.isInteger(this.totalClusters)) {
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of Clusters must be an integer.');
+            }
+        }
+
+        /**
+         * Amount of Shards per Clusters
+         * @type {number}
+         */
+        this.shardsPerClusters = options.shardsPerClusters;
+        if (this.shardsPerClusters) {
+            if (typeof this.shardsPerClusters !== 'number' || isNaN(this.shardsPerClusters)) {
+                throw new TypeError('CLIENT_INVALID_OPTION | Amount of ShardsPerClusters must be a number.');
+            }
+            if (this.shardsPerClusters &lt; 1)
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of shardsPerClusters must be at least 1.');
+            if (!Number.isInteger(this.shardsPerClusters)) {
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of Shards Per Clusters must be an integer.');
+            }
+        }
+
+        /**
+         * Mode for shards to spawn with
+         * @type {ClusterManagerMode}
+         */
+        this.mode = options.mode;
+        if (this.mode !== 'worker' &amp;&amp; this.mode !== 'process') {
+            throw new RangeError('CLIENT_INVALID_OPTION' + 'Cluster mode must be ' + '"worker" or "process"');
+        }
+
+        /**
+         * An array of arguments to pass to clusters (only when {@link ClusterManager#mode} is `process`)
+         * @type {string[]}
+         */
+        this.shardArgs = options.shardArgs;
+
+        /**
+         * An array of arguments to pass to the executable (only when {@link ClusterManager#mode} is `process`)
+         * @type {string[]}
+         */
+        this.execArgv = options.execArgv;
+
+        /**
+         * List of internal shard ids this cluster manager spawns
+         * @type {string|number[]}
+         */
+        this.shardList = options.shardList || 'auto';
+        if (this.shardList !== 'auto') {
+            if (!Array.isArray(this.shardList)) {
+                throw new TypeError('CLIENT_INVALID_OPTION | shardList must be an array.');
+            }
+            this.shardList = [...new Set(this.shardList)];
+            if (this.shardList.length &lt; 1) throw new RangeError('CLIENT_INVALID_OPTION | shardList must contain at least 1 ID.');
+            if (
+                this.shardList.some(
+                    shardID =>
+                        typeof shardID !== 'number' || isNaN(shardID) || !Number.isInteger(shardID) || shardID &lt; 0,
+                )
+            ) {
+                throw new TypeError('CLIENT_INVALID_OPTION | shardList has to contain an array of positive integers.');
+            }
+        }
+
+        /**
+         * Token to use for obtaining the automatic internal shards count, and passing to bot script
+         * @type {?string}
+         */
+        this.token = options.token ? options.token.replace(/^Bot\s*/i, '') : null;
+
+        /**
+         * A collection of all clusters the manager spawned
+         * @type {Collection&lt;number, Cluster>}
+         */
+        this.clusters = new Map();
+        this.shardClusterList = null;
+        process.env.SHARD_LIST = undefined;
+        process.env.TOTAL_SHARDS = this.totalShards;
+        process.env.CLUSTER = undefined;
+        process.env.CLUSTER_COUNT = this.totalClusters;
+        process.env.CLUSTER_MANAGER = true;
+        process.env.CLUSTER_MANAGER_MODE = this.mode;
+        process.env.DISCORD_TOKEN = this.token;
+        process.env.MAINTENANCE = undefined;
+
+        if (options.queue.auto) process.env.CLUSTER_QUEUE_MODE = 'auto';
+        else process.env.CLUSTER_QUEUE_MODE = 'manual';
+
+        /**
+         * A Array of IDS[Number], which should be assigned to the spawned Clusters
+         * @type {number[]}
+         */
+        this.clusterList = options.clusterList || [];
+
+        this.queue = new Queue(options.queue);
+
+        this._debug(`[START] Cluster Manager has been initialized`);
+
+        this.promise = new PromiseHandler();
+    }
+    /**
+     * Spawns multiple internal shards.
+     * @typedef {Object} ClusterSpawnOptions
+     * @property {number|string} [amount=this.totalShards] Number of internal shards to spawn
+     * @property {number} [delay=7000] How long to wait in between spawning each cluster (in milliseconds)
+     * @property {number} [tTimeout=30000] The amount in milliseconds to wait until the {@link Client} has become ready
+     * before resolving. (-1 or Infinity for no wait)
+     * @returns {Promise&lt;Collection&lt;number, Cluster>>}
+     */
+    async spawn({ amount = this.totalShards, delay = 7000, timeout = -1 } = {}) {
+        if (delay &lt; 7000) {
+            process.emitWarning(
+                `Spawn Delay (delay: ${delay}) is smaller than 7s, this can cause global rate limits on /gateway/bot`,
+                {
+                    code: 'CLUSTER_MANAGER',
+                },
+            );
+        }
+
+        if (amount === 'auto') {
+            amount = await Util.fetchRecommendedShards(this.token, 1000);
+            this.totalShards = amount;
+            this._debug(`Discord recommended a total shard count of ${amount}`);
+        } else {
+            if (typeof amount !== 'number' || isNaN(amount)) {
+                throw new TypeError('CLIENT_INVALID_OPTION | Amount of Internal Shards must be a number.');
+            }
+            if (amount &lt; 1) throw new RangeError('CLIENT_INVALID_OPTION | Amount of Internal Shards must be at least 1.');
+            if (!Number.isInteger(amount)) {
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of Internal Shards must be an integer.');
+            }
+        }
+        let clusterAmount = this.totalClusters;
+        if (clusterAmount === 'auto') {
+            clusterAmount = os.cpus().length;
+            this.totalClusters = clusterAmount;
+        } else {
+            if (typeof clusterAmount !== 'number' || isNaN(clusterAmount)) {
+                throw new TypeError('CLIENT_INVALID_OPTION | Amount of Clusters must be a number.');
+            }
+            if (clusterAmount &lt; 1) throw new RangeError('CLIENT_INVALID_OPTION | Amount of Clusters must be at least 1.');
+            if (!Number.isInteger(clusterAmount)) {
+                throw new RangeError('CLIENT_INVALID_OPTION | Amount of Clusters must be an integer.');
+            }
+        }
+
+        if (this.shardList === 'auto') this.shardList = [...Array(amount).keys()];
+
+        //Calculate Shards per Cluster:
+        if (this.shardsPerClusters) this.totalClusters = Math.ceil(this.shardList.length / this.shardsPerClusters);
+
+        this.shardClusterList = this.shardList.chunk(Math.ceil(this.shardList.length / this.totalClusters));
+        if (this.shardClusterList.length !== this.totalClusters) {
+            this.totalClusters = this.shardClusterList.length;
+        }
+        if (this.shardList.some(shardID => shardID >= amount)) {
+            throw new RangeError('CLIENT_INVALID_OPTION | Shard IDs must be smaller than the amount of shards.');
+        }
+        this._debug(`[Spawning Clusters]
+    ClusterCount: ${this.totalClusters}
+    ShardCount: ${amount}
+    ShardList: ${this.shardClusterList.join(', ')}`);
+        for (let i = 0; i &lt; this.totalClusters; i++) {
+            const clusterId = this.clusterList[i] || i;
+            const readyTimeout = timeout !== -1 ? timeout + delay * this.shardClusterList[i].length : timeout;
+            const spawnDelay = delay * this.shardClusterList[i].length;
+            this.queue.add({
+                run: (...a) => {
+                    const cluster = this.createCluster(clusterId, this.shardClusterList[i], this.totalShards);
+                    return cluster.spawn(...a);
+                },
+                args: [readyTimeout],
+                timeout: spawnDelay,
+            });
+        }
+        return this.queue.start();
+    }
+
+    /**
+     * Sends a message to all clusters.
+     * @param {*} message Message to be sent to the clusters
+     * @returns {Promise&lt;Cluster[]>}
+     */
+    broadcast(message) {
+        const promises = [];
+        for (const cluster of this.clusters.values()) promises.push(cluster.send(message));
+        return Promise.all(promises).then(e => e._result);
+    }
+    /**
+     * Creates a single cluster.
+     * &lt;warn>Using this method is usually not necessary if you use the spawn method.&lt;/warn>
+     * &lt;info>This is usually not necessary to manually specify.&lt;/info>
+     * @param id
+     * @param shardsToSpawn
+     * @param totalShards
+     * @returns {CLUSTER} Note that the created cluster needs to be explicitly spawned using its spawn method.
+     */
+    createCluster(id, shardsToSpawn, totalShards, recluster = false) {
+        const cluster = new Cluster(this, id, shardsToSpawn, totalShards);
+        if(!recluster) this.clusters.set(id, cluster);
+        /**
+         * Emitted upon creating a cluster.
+         * @event ClusterManager#clusterCreate
+         * @param {Cluster} cluster Cluster that was created
+         */
+        // @todo clusterReady event
+        this.emit('clusterCreate', cluster);
+
+        this._debug(`[CREATE] Created Cluster ${cluster.id}`);
+        return cluster;
+    }
+    /**
+     * Evaluates a script on all clusters, or a given cluster, in the context of the {@link Client}s.
+     * @param {string|Function} script JavaScript to run on each cluster
+     * @param {Object} [options={}] The options for the broadcastEVal
+     * @returns {Promise&lt;*>|Promise&lt;Array&lt;*>>} Results of the script execution
+     */
+    broadcastEval(script, options = {}) {
+        if (!script || (typeof script !== 'string' &amp;&amp; typeof script !== 'function'))
+            return Promise.reject(new TypeError('ClUSTERING_INVALID_EVAL_BROADCAST'));
+        script = typeof script === 'function' ? `(${script})(this, ${JSON.stringify(options.context)})` : script;
+
+        if(Object.prototype.hasOwnProperty.call(options, 'cluster')) {
+            if(typeof options.cluster === 'number'){
+                if(options.cluster &lt; 0 ) throw new RangeError('CLUSTER_ID_OUT_OF_RANGE');
+            }
+            if(Array.isArray(options.cluster)){
+                if(options.cluster.length === 0) throw new RangeError('ARRAY_MUST_CONTAIN_ONE CLUSTER_ID');
+            }
+        }
+        if(options.guildId){
+            options.shard = Util.shardIdForGuildId(options.guildId, this.totalShards);
+            console.log(options.shard);
+        }
+        if(options.shard){
+            if(typeof options.shard === 'number'){
+                if(options.shard &lt; 0 ) throw new RangeError('SHARD_ID_OUT_OF_RANGE');
+            }
+            if(Array.isArray(options.shard)){
+                if(options.shard.length === 0) throw new RangeError('ARRAY_MUST_CONTAIN_ONE SHARD_ID');
+            }
+            options.cluster = [...this.clusters.values()].find(c => c.shardId === options.shard);
+        }
+        return this._performOnClusters('eval', [script], options.cluster, options.timeout);
+    }
+    /**
+     * Fetches a client property value of each cluster, or a given cluster.
+     * @param {string} prop Name of the client property to get, using periods for nesting
+     * @param {number} [cluster] Cluster to fetch property from, all if undefined
+     * @returns {Promise&lt;*>|Promise&lt;Array&lt;*>>}
+     * @example
+     * manager.fetchClientValues('guilds.cache.size')
+     *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
+     *   .catch(console.error);
+     */
+    fetchClientValues(prop, cluster) {
+        return this.broadcastEval(`this.${prop}`, { cluster });
+    }
+
+    /**
+     * Runs a method with given arguments on all clusters, or a given cluster.
+     * @param {string} method Method name to run on each cluster
+     * @param {Array&lt;*>} args Arguments to pass through to the method call
+     * @param {number|array} [cluster] cluster to run on, all if undefined
+     * @param {number} [timeout] the amount of of time to wait until the promise will be rejected
+     * @returns {Promise&lt;*>|Promise&lt;Array&lt;*>>} Results of the method execution
+     * @private
+     */
+    _performOnClusters(method, args, cluster, timeout) {
+        if (this.clusters.size === 0) return Promise.reject(new Error('CLUSTERING_NO_CLUSTERS'));
+
+        if (typeof cluster === 'number') {
+            if (this.clusters.has(cluster)) return this.clusters.get(cluster)[method](...args, undefined, timeout);
+            return Promise.reject(new Error('CLUSTERING_CLUSTER_NOT_FOUND FOR ClusterId: ' + cluster));
+        }
+        let clusters = [...this.clusters.values()];
+        if (cluster) clusters = clusters.filter(c => cluster.includes(c.id));
+        if(clusters.length === 0) return Promise.reject(new Error('CLUSTERING_NO_CLUSTERS_FOUND'));
+
+        /* if (this.clusters.size !== this.totalClusters &amp;&amp; !cluster) return Promise.reject(new Error('CLUSTERING_IN_PROCESS')); */
+
+        const promises = [];
+        for (const cl of clusters) promises.push(cl[method](...args, undefined, timeout));
+        return Promise.all(promises);
+    }
+
+    /**
+     * Kills all running clusters and respawns them.
+     * @param {ClusterRespawnOptions} [options] Options for respawning shards
+     * @returns {Promise&lt;Collection&lt;number, Cluster>>}
+     */
+    async respawnAll({ clusterDelay = 5500, respawnDelay = 500, timeout = -1 } = {}) {
+        this.promise.nonce.clear();
+        let s = 0;
+        let i = 0;
+        for (const cluster of [...this.clusters.values()]) {
+            const promises = [cluster.respawn({ delay: respawnDelay, timeout })];
+            if (++s &lt; this.clusters.size &amp;&amp; clusterDelay > 0)
+                promises.push(Util.delayFor(this.shardClusterList[i].length * clusterDelay));
+            i++;
+            await Promise.all(promises); // eslint-disable-line no-await-in-loop
+        }
+        this._debug('Respawning all Clusters');
+        return this.clusters;
+    }
+
+    //Custom Functions:
+
+    /**
+     * Runs a method with given arguments on the Manager itself
+     * @param script
+     * @returns {Promise&lt;*>|Promise&lt;Array&lt;*>>} Results of the script execution
+     * @private
+     */
+    async evalOnManager(script) {
+        script = typeof script === 'function' ? `(${script})(this)` : script;
+        let result;
+        let error;
+        try {
+            result = await eval(script);
+        } catch (err) {
+            error = err;
+        }
+        return {_result: result, _error: error ? Util.makePlainError(error) : null};
+    }
+
+    /**
+     * Runs a method with given arguments on the provided Cluster Client
+     * @param script
+     * @param options
+     * @returns {Promise&lt;*>|Promise&lt;Array&lt;*>>} Results of the script execution
+     * @private
+     */
+    evalOnCluster(script, options) {
+        return this.broadcastEval(script, options).then(r => r[0]);
+    }
+
+    /**
+     * Adds a plugin to the cluster manager
+     */
+    extend(...plugins){
+        if(!plugins) throw new Error('NO_PLUGINS_PROVIDED');
+        if(!Array.isArray(plugins)) plugins = [plugins];
+        for(const plugin of plugins){
+            if(!plugin) throw new Error('PLUGIN_NOT_PROVIDED');
+            if(typeof plugin !== 'object') throw new Error('PLUGIN_NOT_A_OBJECT');
+            plugin.build(this);
+        }
+    }
+
+    /**
+    * @param {string} reason If maintenance should be enabled on all clusters with a given reason or disabled when nonce provided
+    */
+    triggerMaintenance(reason) {
+       return [...this.clusters.values()].forEach(cluster => cluster.triggerMaintenance(reason));
+    }
+    /**
+     * Logs out the Debug Messages
+     * &lt;warn>Using this method just emits the Debug Event.&lt;/warn>
+     * &lt;info>This is usually not necessary to manually specify.&lt;/info>
+     * @param message
+     * @param cluster
+     * @returns {string} returns the log message
+     */
+    _debug(message, cluster) {
+        let log;
+        if (cluster === undefined) {
+            log = `[CM => Manager] ` + message;
+        } else {
+            log = `[CM => Cluster ${cluster}] ` + message;
+        }
+        /**
+         * Emitted upon receiving a message
+         * @event ClusterManager#debug
+         * @param {string} Message, which was received
+         */
+        this.emit('debug', log);
+        return log;
+    }
+}
+module.exports = ClusterManager;
+
+Object.defineProperty(Array.prototype, 'chunk', {
+    value: function (chunkSize) {
+        var R = [];
+        for (var i = 0; i &lt; this.length; i += chunkSize) R.push(this.slice(i, i + chunkSize));
+        return R;
+    },
+});
+</code></pre></article></section></div></div></div><div class="search-container" id="PkfLWpAbet" style="display:none"><div class="wrapper" id="iCxFxjkHbP"><button class="icon-button search-close-button" id="VjLlGakifb" aria-label="close search"><svg><use xlink:href="#close-icon"></use></svg></button><div class="search-box-c"><svg><use xlink:href="#search-icon"></use></svg> <input type="text" id="vpcKVYIppa" class="search-input" placeholder="Search..." autofocus></div><div class="search-result-c" id="fWwVHRuDuN">Type anything to view search result</div></div></div><div class="mobile-menu-icon-container"><button class="icon-button" id="mobile-menu" data-isopen="false" aria-label="menu"><svg><use xlink:href="#menu-icon"></use></svg></button></div><div id="mobile-sidebar" class="mobile-sidebar-container"><div class="mobile-sidebar-wrapper"><a href="/" class="sidebar-title">Home</a><div class="mobile-nav-links"></div><div class="mobile-sidebar-items-c"><div class="sidebar-section-title with-arrow" data-isopen="false" id="tPlX2SkmnK-_oezTZfzi-"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="Cluster.html">Cluster</a></div><div class="sidebar-section-children"><a href="ClusterClient.html">ClusterClient</a></div><div class="sidebar-section-children"><a href="ClusterManager.html">ClusterManager</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="k_8M6MVk3FsKQ5K_fQCsH"><div>Events</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="Client.html#event:error">error</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:death">death</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:error">error</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:ready">ready</a></div><div class="sidebar-section-children"><a href="Cluster.html#event:spawn">spawn</a></div><div class="sidebar-section-children"><a href="ClusterClient.html#event:message">message</a></div><div class="sidebar-section-children"><a href="ClusterManager.html#event:clusterCreate">clusterCreate</a></div><div class="sidebar-section-children"><a href="ClusterManager.html#event:debug">debug</a></div><div class="sidebar-section-children"><a href="Shard.html#event:message">message</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="i3CDfNkxjKmTpjriTk-qY"><div>Global</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="global.html#ClusterSpawnOptions">ClusterSpawnOptions</a></div></div></div><div class="mobile-navbar-actions"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div></div></div><script type="text/javascript" src="scripts/core.min.js"></script><script src="scripts/search.min.js" defer="defer"></script><script src="scripts/third-party/fuse.js" defer="defer"></script><script type="text/javascript">tocbot.init({tocSelector:"#eed4d2a0bfd64539bb9df78095dec881",contentSelector:".main-content",headingSelector:"h1, h2, h3",hasInnerContainers:!0,scrollContainer:".main-content",headingsOffset:130,onClick:bringLinkToView})</script></body></html>
